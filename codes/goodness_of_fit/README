@@ -1,0 +1,4 @@
+> goodnessOfFit_*.R files generate data and compute the power of the goodness-of-fit hypothesis test for each setting. 
+They should be run first
+
+> analysis_power.R generates the plots for the power analysis.
