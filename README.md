@@ -1,12 +1,12 @@
 # ratio_estimator
 This repository contains the codes used in the experiments related to paper named “Quantification under prior probability shift: the ratio
-estimator and its extensions” by Afonso Fernandes Vaz, Rafael Izbicki and Rafael Bassi Stern. We performed three experiments looking for:
+estimator and its extensions” (https://arxiv.org/abs/1807.03929) by Afonso Fernandes Vaz, Rafael Izbicki and Rafael Bassi Stern. We performed three experiments, aiming at:
 
-1. Comparate different quantification methods under prior shift scenario;
-2. Evaluate perfomance of our goodness-of-fit test;
-3. Comparate the ratio regression estimator against classify and count approach.
+1. Comparing different quantification methods under prior shift scenario;
+2. Evaluating perfomance of our goodness-of-fit test;
+3. Comparing the ratio regression estimator against the classify and count approach.
 
-We organize each experiment in a own folder of the repository and discussed them bellow.
+We organize each experiment in their own folder of the repository as discussed bellow.
 
 ###  Ratio estimator (ratio)
 Systematically, the experiment 
