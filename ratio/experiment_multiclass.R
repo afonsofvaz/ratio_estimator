@@ -1,5 +1,5 @@
 library(tidyverse)
-source("code/quantification_multiclass.R")
+source("ratio/quantification_multiclass.R")
 
 prob <- c(0.25,0.1,0.65)
 
@@ -67,8 +67,8 @@ for(ii in 1:B)
   }
 }
 
-saveRDS(risk_not_projected,"risk_not_projected.RDS")
-saveRDS(risk_projected,"risk_projected.RDS")
+saveRDS(risk_not_projected,"ratio/outputs/results/risk_not_projected.RDS")
+saveRDS(risk_projected,"ratio/outputs/results/risk_projected.RDS")
 
 
 plot(n_grid,rowMeans(risk_not_projected),col=2)
@@ -96,6 +96,6 @@ ggplot(data_plot)+
   ylab("Risk (log scale)")+
   xlab("Sample size (log scale)")+
   scale_color_discrete(name="Ratio Estimator")
-ggsave(filename = "figures/multiclass.png")
+ggsave(filename = "ratio/outputs/plots/multiclass.png")
 
   

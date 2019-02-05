@@ -1,3 +1,6 @@
+set.seed(10)
+source(file ="ratio/auxs_funcs.R")
+
 ## Specifying the g's functions and parameters
 forman.random = list(func=g.forman.random,extra=list(n.tree=1000))
 bella.random = list(func=g.bella.random,extra=list(n.tree=1000))
@@ -13,10 +16,10 @@ kernel.gaussian = list(func=g.kernel.leave,extra=list(lambda=0.001,kernel=gaussi
 kernel.linear = list(func=g.kernel.leave,extra=list(lambda=0.001,kernel=linear.kernel,
                                                   bandwidth=NULL))
 
-g=list(forman.random = forman.random,bella.random = bella.random,
-       forman.logistic = forman.logistic,bella.logistic = bella.logistic,
-       forman.knn = forman.knn,bella.knn = bella.knn,
-       kernel.gaussian = kernel.gaussian,kernel.linear = kernel.linear)
+g=list(forman.random = forman.random) #,bella.random = bella.random,
+       # forman.logistic = forman.logistic,bella.logistic = bella.logistic,
+       # forman.knn = forman.knn,bella.knn = bella.knn,
+       # kernel.gaussian = kernel.gaussian,kernel.linear = kernel.linear)
 
 theta.grid = seq(0.1,0.5,by = 0.1)
 n.sim = 100
@@ -26,12 +29,9 @@ nL = c(10,20,30,50)
 ######### Cancer dataset ################
 #########################################
 
-set.seed(10)
-
-source(file ="codes/aux")
-
-load(file = "codes/ratio/inputs/datasets/dataset.cancer.RData")
-load(file = "codes/ratio/inputs/samples/sample.cancer.RData")
+## Ratio method
+load(file = "ratio/inputs/datasets/dataset.cancer.RData")
+load(file = "ratio/inputs/samples/samples.cancer.RData")
 
 i=1
 j=1
@@ -84,24 +84,71 @@ for(j in 1:n.sim){
                                                           out$comb.new))
     
     
-    save(out.cancer.ratio,file = "codes/ratio/outputs/results/out.cancer.ratio.RData")
-    save(out.cancer.comb.new,file = "codes/ratio/outputs/results/out.cancer.comb.new.RData")
+    save(out.cancer.ratio,file = "ratio/outputs/results/out.cancer.ratio.RData")
+    save(out.cancer.comb.new,file = "ratio/outputs/results/out.cancer.comb.new.RData")
     
   }
 }
 
+
+## EM method
+i=1
+j=1
+
+x.train=dataset.cancer[sample.cancer[[i]]$train[j,],
+                       -c(which(names(dataset.cancer)=="response"))]
+y.train=dataset.cancer[sample.cancer[[i]]$train[j,],"response"]
+
+x.target=dataset.cancer[sample.cancer[[i]]$target[j,],
+                        -c(which(names(dataset.cancer)=="response"))]
+y.target=dataset.cancer[sample.cancer[[i]]$target[j,],"response"]
+
+
+out = em_method(x.train,y.train,x.target,y.target = y.target,g = g)
+
+
+out.cancer.em = cbind(Id = rep(j,length(g)), n0 = rep(sample.cancer[[i]]$inf[1,1],length(g)),
+                      n1 = rep(sample.cancer[[i]]$inf[1,2],length(g)),
+                      theta_tg = rep(theta.grid[i],length(g)),
+                      out)
+
+
+for(j in 1:n.sim){
+  for(i in 1:length(theta.grid)){
+    
+    print((i +length(theta.grid)*(j-1))/(length(theta.grid)*n.sim))
+    
+    x.train=dataset.cancer[sample.cancer[[i]]$train[j,],
+                           -c(which(names(dataset.cancer)=="response"))]
+    y.train=dataset.cancer[sample.cancer[[i]]$train[j,],"response"]
+    
+    x.target=dataset.cancer[sample.cancer[[i]]$target[j,],
+                            -c(which(names(dataset.cancer)=="response"))]
+    y.target=dataset.cancer[sample.cancer[[i]]$target[j,],"response"]
+    
+    out = em_method(x.train,y.train,x.target,y.target = y.target,g = g)
+    
+    out.cancer.em = rbind(out.cancer.em,cbind(Id = rep(j,length(g)), n0 = rep(sample.cancer[[i]]$inf[1,1],length(g)),
+                                              n1 = rep(sample.cancer[[i]]$inf[1,2],length(g)),
+                                              theta_tg = rep(theta.grid[i],length(g)),
+                                              out))
+    
+    
+    save(out.cancer.em,file = "ratio/outputs/results/out.cancer.em.RData")
+    
+  }
+}
 
 
 #########################################
 ########## Block dataset ################
 #########################################
 
+## Ratio method
 set.seed(10)
 
-source(file ="codes/aux")
-
-load(file = "codes/ratio/inputs/datasets/dataset.block.RData")
-load(file = "codes/ratio/inputs/samples/sample.block.RData")
+load(file = "ratio/inputs/datasets/dataset.block.RData")
+load(file = "ratio/inputs/samples/samples.block.RData")
 
 i=1
 j=1
@@ -154,25 +201,71 @@ for(j in 1:n.sim){
                                                           out$comb.new))
     
     
-    save(out.block.ratio,file = "codes/ratio/outputs/results/out.block.ratio.RData")
-    save(out.block.comb.new,file = "codes/ratio/outputs/results/out.block.comb.new.RData")
+    save(out.block.ratio,file = "ratio/outputs/results/out.block.ratio.RData")
+    save(out.block.comb.new,file = "ratio/outputs/results/out.block.comb.new.RData")
     
   }
 }
 
+## EM method
 
+i=1
+j=1
+
+x.train=dataset.block[sample.block[[i]]$train[j,],
+                      -c(which(names(dataset.block)=="response"))]
+y.train=dataset.block[sample.block[[i]]$train[j,],"response"]
+
+x.target=dataset.block[sample.block[[i]]$target[j,],
+                       -c(which(names(dataset.block)=="response"))]
+y.target=dataset.block[sample.block[[i]]$target[j,],"response"]
+
+
+out = em_method(x.train,y.train,x.target,y.target = y.target,g = g)
+
+
+out.block.em = cbind(Id = rep(j,length(g)), n0 = rep(sample.block[[i]]$inf[1,1],length(g)),
+                     n1 = rep(sample.block[[i]]$inf[1,2],length(g)),
+                     theta_tg = rep(theta.grid[i],length(g)),
+                     out)
+
+
+for(j in 1:n.sim){
+  for(i in 1:length(theta.grid)){
+    
+    print((i +length(theta.grid)*(j-1))/(length(theta.grid)*n.sim))
+    
+    x.train=dataset.block[sample.block[[i]]$train[j,],
+                          -c(which(names(dataset.block)=="response"))]
+    y.train=dataset.block[sample.block[[i]]$train[j,],"response"]
+    
+    x.target=dataset.block[sample.block[[i]]$target[j,],
+                           -c(which(names(dataset.block)=="response"))]
+    y.target=dataset.block[sample.block[[i]]$target[j,],"response"]
+    
+    out = em_method(x.train,y.train,x.target,y.target = y.target,g = g)
+    
+    out.block.em = rbind(out.block.em,cbind(Id = rep(j,length(g)), n0 = rep(sample.block[[i]]$inf[1,1],length(g)),
+                                            n1 = rep(sample.block[[i]]$inf[1,2],length(g)),
+                                            theta_tg = rep(theta.grid[i],length(g)),
+                                            out))
+    
+    
+    save(out.block.em,file = "ratio/outputs/results/out.block.em.RData")
+    
+  }
+}
 
 
 #########################################
 ########## Spam dataset #################
 #########################################
 
+## Ratio method
 set.seed(10)
 
-source(file ="codes/aux")
-
-load(file = "codes/ratio/inputs/datasets/dataset.spam.RData")
-load(file = "codes/ratio/inputs/samples/sample.spam.RData")
+load(file = "ratio/inputs/datasets/dataset.spam.RData")
+load(file = "ratio/inputs/samples/samples.spam.RData")
 
 i=1
 j=1
@@ -225,23 +318,69 @@ for(j in 1:n.sim){
                                                           out$comb.new))
     
     
-    save(out.spam.ratio,file = "codes/ratio/outputs/results/out.spam.ratio.RData")
-    save(out.spam.comb.new,file = "codes/ratio/outputs/results/out.spam.comb.new.RData")
+    save(out.spam.ratio,file = "ratio/outputs/results/out.spam.ratio.RData")
+    save(out.spam.comb.new,file = "ratio/outputs/results/out.spam.comb.new.RData")
     
   }
 }
 
+## EM method
+
+i=1
+j=1
+
+x.train=dataset.spam[sample.spam[[i]]$train[j,],
+                     -c(which(names(dataset.spam)=="response"))]
+y.train=dataset.spam[sample.spam[[i]]$train[j,],"response"]
+
+x.target=dataset.spam[sample.spam[[i]]$target[j,],
+                      -c(which(names(dataset.spam)=="response"))]
+y.target=dataset.spam[sample.spam[[i]]$target[j,],"response"]
+
+
+out = em_method(x.train,y.train,x.target,y.target = y.target,g = g)
+
+
+out.spam.em = cbind(Id = rep(j,length(g)), n0 = rep(sample.spam[[i]]$inf[1,1],length(g)),
+                    n1 = rep(sample.spam[[i]]$inf[1,2],length(g)),
+                    theta_tg = rep(theta.grid[i],length(g)),
+                    out)
+
+
+for(j in 1:n.sim){
+  for(i in 1:length(theta.grid)){
+    
+    print((i +length(theta.grid)*(j-1))/(length(theta.grid)*n.sim))
+    
+    x.train=dataset.spam[sample.spam[[i]]$train[j,],
+                         -c(which(names(dataset.spam)=="response"))]
+    y.train=dataset.spam[sample.spam[[i]]$train[j,],"response"]
+    
+    x.target=dataset.spam[sample.spam[[i]]$target[j,],
+                          -c(which(names(dataset.spam)=="response"))]
+    y.target=dataset.spam[sample.spam[[i]]$target[j,],"response"]
+    
+    out = em_method(x.train,y.train,x.target,y.target = y.target,g = g)
+    
+    out.spam.em = rbind(out.spam.em,cbind(Id = rep(j,length(g)), n0 = rep(sample.spam[[i]]$inf[1,1],length(g)),
+                                          n1 = rep(sample.spam[[i]]$inf[1,2],length(g)),
+                                          theta_tg = rep(theta.grid[i],length(g)),
+                                          out))
+    
+    
+    save(out.spam.em,file = "ratio/outputs/results/out.spam.em.RData")
+    
+  }
+}
 
 #########################################
 ########## Bank dataset #################
 #########################################
 
+## Ratio method
 set.seed(10)
-
-source(file ="codes/aux")
-
-load(file = "codes/ratio/inputs/datasets/dataset.bank.RData")
-load(file = "codes/ratio/inputs/samples/sample.bank.RData")
+load(file = "ratio/inputs/datasets/dataset.bank.RData")
+load(file = "ratio/inputs/samples/samples.bank.RData")
 
 i=1
 j=1
@@ -294,13 +433,61 @@ for(j in 1:n.sim){
                                                           out$comb.new))
     
     
-    save(out.bank.ratio,file = "codes/ratio/outputs/results/out.bank.ratio.RData")
-    save(out.bank.comb.new,file = "codes/ratio/outputs/results/out.bank.comb.new.RData")
+    save(out.bank.ratio,file = "ratio/outputs/results/out.bank.ratio.RData")
+    save(out.bank.comb.new,file = "ratio/outputs/results/out.bank.comb.new.RData")
     
   }
 }
 
 
+## EM method
+
+i=1
+j=1
+
+x.train=dataset.bank[sample.bank[[i]]$train[j,],
+                     -c(which(names(dataset.bank)=="response"))]
+y.train=dataset.bank[sample.bank[[i]]$train[j,],"response"]
+
+x.target=dataset.bank[sample.bank[[i]]$target[j,],
+                      -c(which(names(dataset.bank)=="response"))]
+y.target=dataset.bank[sample.bank[[i]]$target[j,],"response"]
+
+
+out = em_method(x.train,y.train,x.target,y.target = y.target,g = g)
+
+
+out.bank.em = cbind(Id = rep(j,length(g)), n0 = rep(sample.bank[[i]]$inf[1,1],length(g)),
+                    n1 = rep(sample.bank[[i]]$inf[1,2],length(g)),
+                    theta_tg = rep(theta.grid[i],length(g)),
+                    out)
+
+
+for(j in 1:n.sim){
+  for(i in 1:length(theta.grid)){
+    
+    print((i +length(theta.grid)*(j-1))/(length(theta.grid)*n.sim))
+    
+    x.train=dataset.bank[sample.bank[[i]]$train[j,],
+                         -c(which(names(dataset.bank)=="response"))]
+    y.train=dataset.bank[sample.bank[[i]]$train[j,],"response"]
+    
+    x.target=dataset.bank[sample.bank[[i]]$target[j,],
+                          -c(which(names(dataset.bank)=="response"))]
+    y.target=dataset.bank[sample.bank[[i]]$target[j,],"response"]
+    
+    out = em_method(x.train,y.train,x.target,y.target = y.target,g = g)
+    
+    out.bank.em = rbind(out.bank.em,cbind(Id = rep(j,length(g)), n0 = rep(sample.bank[[i]]$inf[1,1],length(g)),
+                                          n1 = rep(sample.bank[[i]]$inf[1,2],length(g)),
+                                          theta_tg = rep(theta.grid[i],length(g)),
+                                          out))
+    
+    
+    save(out.bank.em,file = "ratio/outputs/results/out.bank.em.RData")
+    
+  }
+}
 
 
 

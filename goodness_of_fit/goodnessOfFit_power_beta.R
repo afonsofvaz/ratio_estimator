@@ -149,7 +149,7 @@ for(b in 1:B)
     
     
     p[s,b]=result
-    saveRDS(list(p=p,mu=mu,shift.grid=shift.grid),"powerMC_beta.RDS")
+    saveRDS(list(p=p,mu=mu,shift.grid=shift.grid),"goodness_of_fit/outputs/results/powerMC_beta.RDS")
   }
   
 }

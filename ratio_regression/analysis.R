@@ -47,7 +47,7 @@ for(B in 1:200){
         id_nl = 2
 
       for(k in c(1,2)){
-        test = try(load(paste0("../results/",mu,"_",k,"_",n_labeled,"_",B,".RData")),
+        test = try(load(paste0("ratio_regression/outputs/results/",mu,"_",k,"_",n_labeled,"_",B,".RData")),
                    silent = T)
         if(identical(class(test),"try-error"))
           next;
@@ -78,5 +78,6 @@ data_error = results%>% group_by(method,k,mu,b) %>% summarise(EQM = sqrt(mean(er
 
 
 require(ggplot2)
-data_error %>% ggplot(aes(y = EQM, x = method,colour = method)) +geom_boxplot()+
+g1 = data_error %>% ggplot(aes(y = EQM, x = method,colour = method)) +geom_boxplot()+
     facet_wrap(k ~ mu, ncol = 4) + theme_minimal()
+ggsave(g1,file = "ratio_regression/outputs/plots/regression_error.pdf",width = 10,height = 8,limitsize = FALSE)
