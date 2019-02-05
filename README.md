@@ -19,7 +19,7 @@ The are three folders in this repository:
 
 Each of these folders is related to an experiment mentioned in the decription. Moreover, there is a file named `ratio_estimator.R` which you can use to replicate our results more easily. If you don't use the RStudio environment, you might set your working directory into the root folder of this repository before runnig any script. 
 
-The packages used in our experiments can be found in the file `dependencies.R`. Make sure that you have all theses packages, otherwise you should install them.
+The packages used in our experiments can be found in the file `dependencies.R`. Make sure that you have all these packages, otherwise you should install them.
 
 Next, we present the steps to perform each experiment.
 
