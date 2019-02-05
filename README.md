@@ -1,17 +1,37 @@
 # ratio_estimator
+
+## Description
 This repository contains the codes used in the experiments related to paper named “Quantification under prior probability shift: the ratio
 estimator and its extensions” (https://arxiv.org/abs/1807.03929) by Afonso Fernandes Vaz, Rafael Izbicki and Rafael Bassi Stern. We performed three experiments, aiming at:
 
-1. Comparing different quantification methods under prior shift scenario;
+1. Comparing different quantification methods (including combined estimator and multiclass) under prior shift scenario as well as the confidence interval properties;
 2. Evaluating perfomance of our goodness-of-fit test;
 3. Comparing the ratio regression estimator against the classify and count approach.
 
 We organize each experiment in their own folder of the repository as discussed bellow.
 
-###  Ratio estimator (ratio)
-Systematically, the experiment 
-can be seen as a process where each step has its own goal, inputs and outputs. This process is represented by the following flow. 
+## Usage
+The are three folders in this repository:
 
-![alt tag](codes/ratio/ratio_experiment.png)
+- ratio;
+- goodness_of_fit;
+- ratio_regression.
 
-There are two
+Each of these folders is related to an experiment mentioned in decription. Moreover, there is a file named `ratio_estimator.R` which you can use to replicate our results more easily. If you dont use RSutdio enviroment so you might set your work directory into root folder of this repository before run any script.
+
+Next I present the steps to perform each experiment.
+
+### ratio
+1. Run `sample_generation.R`. It load all dataset and generates samples from them simulating different prior shift settings.
+2. Run `quantification.R`. It apply the discussed methods over the samples generated in the previous step.
+3. Run `analisys.R`. It generate the tables (latex code) and plots related to the Section 2 of our work (except for the multiclass experiment). These plots will be saved in the folder `ratio_estimator/ratio/outputs/plots`. 
+4. Finally, to perform the multiclass experiment, you should run `experiment_multiclass`. It also will save the plots in the plots folder.
+
+### ratio_regression
+1. Run `simulation.R`.It generate artificial samples and perform ratio regression and classify and count estimators.   
+2. Run `analysis`. It load the results and makes the plots related to Section 3. These plots will be sabed in the folder `ratio_estimator/ratio_regression/outputs/plots`.
+
+### goodness-of-fit
+1. goodnessOfFit_\*.R files generate data and compute the power of the goodness-of-fit hypothesis test for each setting. 
+They should be run first.
+2. Analysis_power.R generates the plots for the power analysis. These plots will be sabed in the folder `ratio_estimator/goodness-of-fit/plots`.
