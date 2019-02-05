@@ -34,9 +34,9 @@ Next, we present the steps to perform each experiment.
 2. Run `analysis.R`. It loads the results and plots the figures from Section 3. These plots are saved in the folder `ratio_estimator/ratio_regression/outputs/plots`.
 
 ### goodness-of-fit
-1. The goodnessOfFit_\*.R files generate data and compute the power of the goodness-of-fit hypothesis test for each setting. 
+1. The `goodnessOfFit_*.R` files generate data and compute the power of the goodness-of-fit hypothesis test for each setting. 
 They should be run first.
-2. Analysis_power.R generates the plots for the power analysis. These plots are saved in the folder `ratio_estimator/goodness-of-fit/plots`.
+2. `Analysis_power.R` generates the plots for the power analysis. These plots are saved in the folder `ratio_estimator/goodness-of-fit/plots`.
 
 
 If you have any questions (or other feedback), please send an e-mail to afonsofvaz@gmail.com.
