@@ -4,7 +4,7 @@
 This repository contains the codes used in the experiments related to paper named “Quantification under prior probability shift: the ratio
 estimator and its extensions” (https://arxiv.org/abs/1807.03929) by Afonso Fernandes Vaz, Rafael Izbicki and Rafael Bassi Stern. We performed three experiments, aiming at:
 
-1. Comparing different quantification methods (including combined estimator and multiclass) under prior shift scenario as well as the confidence interval properties;
+1. Comparing different quantification methods (including combined and multiclass estimators) under prior shift scenario as well as evaluate the confidence interval properties;
 2. Evaluating perfomance of our goodness-of-fit test;
 3. Comparing the ratio regression estimator against the classify and count approach.
 
@@ -17,7 +17,7 @@ The are three folders in this repository:
 - goodness_of_fit;
 - ratio_regression.
 
-Each of these folders is related to an experiment mentioned in decription. Moreover, there is a file named `ratio_estimator.R` which you can use to replicate our results more easily. If you dont use RSutdio enviroment so you might set your work directory into root folder of this repository before run any script.
+Each of these folders is related to an experiment mentioned in decription. Moreover, there is a file named `ratio_estimator.R` which you can use to replicate our results more easily. If you dont use RSutdio environment so you might set your work directory into root folder of this repository before run any script.
 
 Next I present the steps to perform each experiment.
 
@@ -35,3 +35,6 @@ Next I present the steps to perform each experiment.
 1. goodnessOfFit_\*.R files generate data and compute the power of the goodness-of-fit hypothesis test for each setting. 
 They should be run first.
 2. Analysis_power.R generates the plots for the power analysis. These plots will be sabed in the folder `ratio_estimator/goodness-of-fit/plots`.
+
+
+If you have any questions (or another feedbaks), send an e-mail to afonsofvaz@gmail.com.
