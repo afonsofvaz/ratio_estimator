@@ -1,5 +1,5 @@
 ###Simulation
-source("R/funcs.R")
+source("ratio_regression/funcs.R")
 
 ## mu in {0.5,1,1.5,2}
 ## n_labeled in {100,500}
@@ -42,7 +42,7 @@ for(B in 1:200){
          identical(class(w2),"try-error"))
         next;
 
-      save.image(paste0("../results/",mu,"_",k,"_",n_labeled,"_",B,".RData"))
+      save.image(paste0("ratio_regression/outputs/results/",mu,"_",k,"_",n_labeled,"_",B,".RData"))
 
       }
     }
